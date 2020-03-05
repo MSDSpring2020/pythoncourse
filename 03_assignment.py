@@ -24,9 +24,28 @@ import uuid
 
 
 class Box:
-    def __init__(self, length, width):
-        self.__length = length
+    # Init function
+    def __init__(self):
+        # The only members are length and width
+        self.__length = 1
+        self.__width = 1
+
+    # Setters
+    def set_width(self, width):
         self.__width = width
+
+    def set_length(self, length):
+        self.__length = length
+
+    # Getters
+    def get_width(self):
+        return self.__width
+
+    def get_length(self):
+        return self.__length
+
+    def get_area(self):
+        return self.__length * self.__width
 
     def render(self):
         for i in range(self.__length):
@@ -35,27 +54,17 @@ class Box:
     def invert(self):
         self.__length, self.__width = self.__width, self.__length
 
-    def get_area(self):
-        return self.__length * self.__width
-
     def get_perimeter(self):
-        return 2*self.__length + 2*self.__width
-
-    def get_length(self):
-        return self.__length
-
-    def get_width(self):
-        return self.__width
+        return (2 * self.__length + 2 * self.__width)
 
     def double(self):
-        self.__width = self.__width * 2
-        return Box(self.__length, self.__width)
+        return self.__width * 2
 
     def __eq__(self, other):
         return self.__length == other.__length and self.__width == other.__width
 
     def print_dim(self):
-        return print("Length is " + str(self.__length) + " and Width is " + str(self.__width))
+        return 'length = {}, width = {}'.format(self.__length, self.__width)
 
     def get_dim(self):
         return self.__length, self.__width
@@ -63,7 +72,7 @@ class Box:
     def combine(self, other):
         self.__length = self.__length + other.__length
         self.__width = self.__width + other.__width
-        return Box(self.__length, self.__width)
+        return self.__length, self.__width
 
     def get_hypot(self):
         return math.sqrt(self.__length**2 + self.__width**2)
@@ -99,7 +108,6 @@ class MangoDB:
         del self.__collections[collection_name]
 
     def get_collection_names(self):
-        # list(self.__collections.keys())
         return [c for c in self.__collections.keys()]
 
     def list_collections(self):
@@ -159,9 +167,18 @@ def exercise01():
 
     # ------ Place code below here \/ \/ \/ ------
 
-    box1 = Box(5, 10)
-    box2 = Box(3, 4)
-    box3 = Box(5, 10)
+
+    box1 = Box()
+    box1.set_length(5)
+    box1.set_width(10)
+
+    box2 = Box()
+    box2.set_length(3)
+    box2.set_width(4)
+
+    box3 = Box()
+    box3.set_length(5)
+    box3.set_width(10)
 
     box1.print_dim()
     box2.print_dim()
