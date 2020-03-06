@@ -86,19 +86,22 @@ import uuid
 class PandasChain:
     # 5 pts - Complete this constructor
     def __init__(self, name):
-        self.__name =  # Convert name to upper case and store it here
-        self.__chain =  # Create an empty list
+        self.__name =  name.upper() # Convert name to upper case and store it here
+        self.__chain =  [] # Create an empty list
         self.__id = hashlib.sha256(str(
             str(uuid.uuid4())+self.__name+str(dt.datetime.now())).encode('utf-8')).hexdigest()
         # Create a sequence ID and set to zero
-        self.__prev_hash =  # Set to None
-        self.__current_block =  # Create a new Block
+        self.__seq_id = 0
+        self.__prev_hash =  None # Set to None
+        self.__current_block =  Block(self.__seq_id, self.__prev_hash) # Create a new Block
         print(self.__name, 'PandasChain created with ID',
               self.__id, 'chain started.')
 
     # 5 pts - This method should loop through all committed and uncommitted blocks and display all transactions in them
     def display_chain(self):
-        pass
+        for i in self.__chain:
+            print(i.display_transactions())
+        print(self.__current_block.display_transactions())
 
     # This method accepts a new transaction and adds it to current block if block is not full.
     # If block is full, it will delegate the committing and creation of a new current block
