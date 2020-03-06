@@ -50,10 +50,9 @@ class Box:
         return self.__width
 
     def double(self):
-        self.__length = self.__length + self.__length
-        self.__width = self.__width + self.__width
-        # return Box(length, width)
-        return Box(self.__length, self.__width)
+        length = self.__length + self.__length
+        width = self.__width + self.__width
+        return Box(length , width)
 
     def __eq__(self, other):
         return self.__length == other.__length and self.__width == other.__width
@@ -178,7 +177,7 @@ def exercise01():
     print(box1 == box3)
 
     box1.combine(box3)
-    box2.double()
+    box2 = box2.double()
     box1.combine(box2)
     for t in box2.get_dim():
         print(t)
