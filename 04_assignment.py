@@ -99,9 +99,7 @@ class PandasChain:
 
     # 5 pts - This method should loop through all committed and uncommitted blocks and display all transactions in them
     def display_chain(self):
-        for i in self.__chain:
-            print(i.display_transactions())
-        print(self.__current_block.display_transactions())
+        pass
 
     # This method accepts a new transaction and adds it to current block if block is not full.
     # If block is full, it will delegate the committing and creation of a new current block
