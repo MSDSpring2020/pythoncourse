@@ -99,7 +99,9 @@ class PandasChain:
 
     # 5 pts - This method should loop through all committed and uncommitted blocks and display all transactions in them
     def display_chain(self):
-        pass
+        for block in self.__chain:
+            print(block.display_transactions())
+        print(self.__current_block.display_transactions())
 
     # This method accepts a new transaction and adds it to current block if block is not full.
     # If block is full, it will delegate the committing and creation of a new current block
@@ -114,75 +116,108 @@ class PandasChain:
     # to the chain list, increment the seq_id and create a new block as the current block
     def __commit_block(self, block):
         # Add code here
-        block_hash =  # Create block hash
-        # Add code here
+        # Create block hash
+        block_hash = self.__current_block.get_simple_merkle_root()  # Create block hash
+        self.__current_block.set_block_hash(block_hash)
+        self.__prev_hash = block_hash
+        self.__chain.append(self.__current_block)
+        self.__seq_id = self.__seq_id + 1
+        self.__current_block.set_status("committed")
+        self.__current_block = Block(self.__seq_id, self.__prev_hash)
         print('Block committed')
 
     # 10 pts - Display just the metadata of all blocks (committed or uncommitted), one block per line.
     # You'll display the sequence Id, status, block hash, previous block's hash, merkle hash and total number (count)
     # of transactions in the block
     def display_block_headers(self):
-        pass
+        for block in self.__chain:
+            print(block.display_header())
+        print(self.__current_block.display_header())
 
     # 5 pts - return int total number of blocks in this chain (committed and uncommitted blocks combined)
     def get_number_of_blocks(self):
-        pass
+        return len(self.__chain) + 1
 
     # 10 pts - Returns all of the values (Pandas coins transferred) of all transactions from every block as a single list
     def get_values(self):
-        pass
+        values = pd.DataFrame()
+        #Iterate through commited blocks
+        for block in self.__chain:
+            values = pd.concat([values, block.get_values()])
+            #Add transactions of uncommited block
+            values = pd.concat([values, self.__current_block.get_values()])
+        return values
 
 
 class Block:
     # 5 pts for constructor
     def __init__(self, seq_id, prev_hash):
-        self.__seq_id =  # Set to what's passed in from constructor
-        self.__prev_hash =  # From constructor
-        self.__col_names = ['Timestamp', 'Sender',
-                            'Receiver', 'Value', 'TxHash']
-        self.__transactions =  # Create a new blank DataFrame with set headers
-        self.__status =  # Initial status. This will be a string.
+        self.__seq_id = seq_id  # Set to what's passed in from constructor
+        self.__prev_hash = prev_hash  # From constructor
+        self.__col_names = ['Timestamp', 'Sender','Receiver', 'Value', 'TxHash']
+        # should be able to replace this with the self.__colnames object
+        self.__transactions = pd.DataFrame(columns = self.__col_names)
+        self.__status = 'uncommitted'  # Initial status. This will be a string.
         self.__block_hash = None
         self.__merkle_tx_hash = None
+
 
     #5 pts -  Display on a single line the metadata of this block. You'll display the sequence Id, status,
     # block hash, previous block's hash, merkle hash and number of transactions in the block
     def display_header(self):
-        pass
+        print(
+            "seq_id: " + str(self.__seq_id) + 
+            " status: " + str(self.__status) + 
+            " block_hash: " + str(self.__block_hash) + 
+            " previous block Hash: " + str(self.__prev_hash) + 
+            " merkle hash: " + str(self.get_simple_merkle_root()) + 
+            " number of transactions: " + str(len(self.__transactions.index)))
 
     # 10 pts - This is the interface for how transactions are added
     def add_transaction(self, s, r, v):
-        ts =  # Get current timestamp
-        tx_hash =  # Hash of timestamp, sender, receiver, value
+        self.__s = s
+        self.__r = r
+        self.__v = v
+        ts =  pd.Timestamp("now") # Get current timestamp
+# Hash of timestamp, sender, receiver, value
+        tx_hash = str(hashlib.sha256(
+            str(str(ts) + str("s") + str("r") + str("v")).encode("utf-8")))
         # Create DataFrame with transaction data (a DataFrame with only 1 row)
-        new_transaction =
+        new_transaction = pd.DataFrame(
+            [[ts, s, r, v, tx_hash]], 
+            columns=self.__col_names
+            )
         # Append to the transactions data
+        self.__transactions = self.__transactions.append(new_transaction)
 
     # 10 pts -Print all transactions contained by this block
     def display_transactions(self):
-        pass
+        print(self.__transactions.to_string())
 
     # 5 pts- Return the number of transactions contained by this block
     def get_size(self):
-        pass
+       return len(self.__transactions)
 
     # 5 pts - Setter for status - Allow for the change of status (only two statuses exist - COMMITTED or UNCOMMITTED).
     # There is no need to validate status.
     def set_status(self, status):
-        pass
+        self.__status = status
 
     # 5 pts - Setter for block hash
     def set_block_hash(self, hash):
-        pass
+        self.__block_hash = hash
 
     # 10 pts - Return and calculate merkle hash by taking all transaction hashes, concatenate them into one string and
     # hash that string producing a "merkle root" - Note, this is not how merkle tries work but is instructive
     # and indicative in terms of the intent and purpose of merkle tries
     def get_simple_merkle_root(self):
-        pass
+        string = ""
+        for block in range(0, len(self.__transactions.index)):
+            string = string + str(self.__transactions.iloc[block]["TxHash"])
+        return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
     def get_values(self):
-        pass
+        return self.__transactions[["Value", "Timestamp"]]
 
 
 class TestAssignment4(unittest.TestCase):
@@ -219,5 +254,8 @@ class TestAssignment4(unittest.TestCase):
         self.assertEqual(pandas_chain.get_number_of_blocks(), 3)
 
 
+
 if __name__ == '__main__':
     unittest.main()
+
+
