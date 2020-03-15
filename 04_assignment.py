@@ -253,7 +253,10 @@ class TestAssignment4(unittest.TestCase):
         pandas_chain.add_transaction("Bob", "Alice", 53)
         self.assertEqual(pandas_chain.get_number_of_blocks(), 3)
 
-
+# plotting the time stamp
+        plt.plot(list(np.arange(
+            1, 1+len(pandas_chain.get_values().iloc[:, 1]))), pandas_chain.get_values().iloc[:, 1])
+        plt.show()
 
 if __name__ == '__main__':
     unittest.main()
