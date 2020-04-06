@@ -177,6 +177,11 @@ def exercise06():
 
     # ------ Place code below here \/ \/ \/ ------
 
+    X = boston.data
+    y = boston.target
+    X_ptratio = X[:, 10]
+    plt.scatter(X_ptratio, y, s=10)
+    plt.show()
 
     # ------ Place code above here /\ /\ /\ ------
 
