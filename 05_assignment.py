@@ -154,7 +154,12 @@ def exercise05():
     '''
 
     # ------ Place code below here \/ \/ \/ ------
-
+    X = boston.data
+    medv_as_numpy_values = boston.target
+    df_data = pd.DataFrame(X, columns=boston.feature_names)
+    df_target = pd.DataFrame(medv_as_numpy_values)
+    average_age = np.mean(df_data['AGE'])
+    average_medv = np.mean(df_target[0])
 
     # ------ Place code above here /\ /\ /\ ------
 
