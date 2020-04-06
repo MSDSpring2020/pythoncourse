@@ -83,8 +83,20 @@ def exercise02(new_observations):
     '''
 
     # ------ Place code below here \/ \/ \/ ------
+    iris =  ds.load_iris()
+    X = iris.data
+    iris_names = iris.target_names.tolist()
 
+    knn = KNN()
+    knn.fit(X, iris.target)
+    KNN()
 
+    iris_predictions = knn.predict(obs)
+    predictions = []
+
+    for i in iris_predictions:
+        predictions.append(iris_names[i])
+    return predictions
     # ------ Place code above here /\ /\ /\ ------
 
 
