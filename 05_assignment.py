@@ -200,7 +200,18 @@ def exercise07():
     '''
 
     # ------ Place code below here \/ \/ \/ ------
-
+    X_PTRATIO = boston.data[:, 10]
+    y = boston.target
+    reg = lm.LinearRegression()
+    prediction_space = np.linspace(
+        min(X_PTRATIO), max(X_PTRATIO)).reshape(-1, 1)
+    reg.fit(X_PTRATIO.reshape(-1, 1), y)
+    reg_model = reg.predict(prediction_space)
+    plt.scatter(X_PTRATIO, y, s=10)
+    plt.plot(prediction_space, reg_model, color='black', linewidth=2)
+    plt.xlabel('PTRATIO')
+    plt.ylabel('MEDV')
+    plt.show()
 
     # ------ Place code above here /\ /\ /\ ------
 
