@@ -91,7 +91,7 @@ def exercise02(new_observations):
     knn.fit(X, iris.target)
     KNN()
 
-    iris_predictions = knn.predict(obs)
+    iris_predictions = knn.predict(new_observations)
     predictions = []
 
     for i in iris_predictions:
@@ -116,8 +116,12 @@ def exercise03(neighbors,split):
     
 
     # ------ Place code below here \/ \/ \/ ------
-
-
+    X = iris.data
+    y = iris.target
+    X_train, X_test, y_train, y_test = tts(X, y, test_size = split, random_state = random_state, stratify = y)
+    knn = KNN(n_neighbors = neighbors)
+    knn.fit(X_train, y_train)
+    knn_score =  knn.score(X_test, y_test)
     # ------ Place code above here /\ /\ /\ ------
 
 
